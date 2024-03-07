@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 enum Status { Successful = 0, Warning, Error };
 
 class CTime {
@@ -12,17 +12,17 @@ public:
 	CTime(const CTime *t);
 	CTime();
 
-	Status assign(CTime* t) const;
+	Status assign(CTime* t);
 	void input();
 	void add_minutes(int minutes);
 	void add_seconds(int seconds);
 	void add_hours(int hours);
-	void output() const;	
+	void output(std::string message = "$hh:$mm:$ss");
 	void set_values(int hours, int minutes, int seconds);
-	void compare(const CTime* t) const;
+	int compare(CTime* t);
 
 private:
-	Status check() const;
+	Status check();
 	Status convert();
 };
 

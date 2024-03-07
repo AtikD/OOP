@@ -33,5 +33,5 @@ void main() {
 	t1.output(); // 15:25:58
 	std::cout << std::endl;
 
-	t2.compare(&t1); // compares the time
+	std::cout << t2.compare(&t1); // compares the time, 1 if t2 >> t1, -1 if t2 << t1, 0 if t1==t2
 }

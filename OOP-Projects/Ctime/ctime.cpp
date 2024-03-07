@@ -1,5 +1,6 @@
 #include "ctime.hpp"
 #include <iostream>
+#include <string>
 
 using namespace std;
 //Конструкторы
@@ -11,13 +12,16 @@ CTime::CTime(int hours, int minutes, int seconds) {
 }
 CTime::CTime(const CTime *t) : CTime(t->hours, t->minutes, t->seconds) {}
 CTime::CTime() : CTime(0, 0, 0) {}
-
 //Функции
-void CTime::output() const{
-	cout << this->hours << ":" << this->minutes << ":" << this->seconds;
+void CTime::output(std::string message) {
+	message.replace(message.find("$hh"), 3, to_string(this->hours));
+	message.replace(message.find("$mm"), 3, to_string(this->minutes));
+	message.replace(message.find("$ss"), 3, to_string(this->seconds));
+	cout << message << endl;
+	
 }
 
-Status CTime::check() const {
+Status CTime::check() {
 	Status state = Successful;
 	if ((this->seconds > 60 || this->seconds < 1) ||
 		(this->minutes > 60 || this->minutes < 1) ||
@@ -29,14 +33,12 @@ Status CTime::check() const {
 
 void CTime::input() {
 	char colon;
-	cout << endl << "Write the time(dd:mm:yy): ";
+	cout << endl << "Write the time(hh:mm:ss): ";
 	cin >> this->hours >> colon
 		>> this->minutes >> colon
 		>> this->seconds;
-	cout << "Successfully read: ";
 	this->convert();
-	this->output();
-	cout << endl;
+	this->output("Successfully read: $hh:$mm:$ss");
 }
 
 
@@ -44,14 +46,15 @@ void CTime::set_values(int hours, int minutes, int seconds) {
 	this->hours = hours;
 	this->minutes = minutes;
 	this->seconds = seconds;
-	cout << endl << "Successfully set: ";
 	this->convert();
-	this->output();
-	cout << endl;
+	this->output("Successfully set: $hh:$mm:$ss");
+
 }
 
 Status CTime::convert() {
 	Status state = Successful;
+	if(this->check()==Successful)
+		return state;
 	while (true) {
 		if (this->seconds > 60) {
 			this->seconds -= 60;
@@ -75,29 +78,23 @@ Status CTime::convert() {
 
 void CTime::add_hours(int hours) {
 	this->hours += hours;
-	cout << endl << "Succeadd_secondsssfully added hours: ";
 	this->convert();
-	this->output();
-	cout << endl;
+	this->output("Successfully added hours: $hh:$mm:$ss");
 }
 
 void CTime::add_minutes(int minutes) {
 	this->minutes += minutes;
-	cout << endl << "Successfully added minutes: ";
 	this->convert();
-	this->output();
-	cout << endl;
+	this->output("Successfully added minutes: $hh:$mm:$ss");
 }
 
 void CTime::add_seconds(int seconds) {
 	this->seconds += seconds;
-	cout << endl << "Successfully added minutes: ";
 	this->convert();
-	this->output();
-	cout << endl;
+	this->output("Successfully added seconds: $hh:$mm:$ss");
 }
 
-Status CTime::assign(CTime* t) const{
+Status CTime::assign(CTime* t){
 	Status state = Successful;
 	if (t == nullptr)
 		state = Error;
@@ -109,7 +106,7 @@ Status CTime::assign(CTime* t) const{
 	return state;
 }
 
-void CTime::compare(const CTime *t) const {
+int CTime::compare(CTime *t){
 	int secs1 = 0, secs2 = 0;
 	secs1 += this->seconds;
 	secs1 += this->minutes * 60;
@@ -120,20 +117,13 @@ void CTime::compare(const CTime *t) const {
 	secs2 += t->hours * 60 * 60;
 
 	if (secs1 > secs2) {
-		cout << endl;
-		this->output();
-		cout << " is bigger than ";
-		t->output();
+		return 1;
 	}
 	if (secs1 < secs2)
 	{
-		cout << endl;
-		t->output();
-		cout << " is bigger than ";
-		this->output();
+		return -1;
 	}
-	if (secs1 == secs2)
-		cout << endl << "The time is equal";
-	cout << endl;
-
+	if (secs1 == secs2) {
+		return 0;
+	}
 }
