@@ -1,20 +1,43 @@
 #include "cfraction.hpp"
 
+/**
+ * \brief Конструктор инициализации
+ * \param numerator Числитель
+ * \param denumerator Знаменатель
+ */
 CFraction::CFraction(int numerator, int denumerator){
 	this->numerator = numerator;
 	this->denumerator = denumerator;
 	if (numerator != 0 && denumerator != 0)
 		simplify();
 }
-//CFraction::CFraction(std::string str){}
+
+/**
+ * \brief Конструктор копирования
+ * \param f Ссылка на объект класса CFraction	
+ */
 CFraction::CFraction(const CFraction& f):CFraction(f.numerator, f.denumerator){}
+
+/**
+ * \brief Конструктор по умолчанию
+ */
 CFraction::CFraction():CFraction(0,0){}
 
+/**
+ * \brief Сокращение строки
+ */
 void CFraction::simplify(){
 	int gcd = this->gcd(numerator, denumerator);
 	numerator /= gcd;
 	denumerator /= gcd;
 }
+
+/**
+ * \brief Поиск НОД
+ * \param a Число a
+ * \param b Число b		
+ * \return Число НОД
+ */
 int CFraction::gcd(const int a, const int b)
 {
 	return b == 0 ? a : gcd(b, a % b);
@@ -194,7 +217,6 @@ bool operator>(const CFraction& frac1, const CFraction& frac2)
 		return true;
 	return false;
 }
-
 bool operator==(const CFraction& frac1, int value)
 {
 	return frac1.numerator == (value * frac1.denumerator);
@@ -219,7 +241,6 @@ bool operator>(const CFraction& frac1, int value)
 {
 	return frac1.numerator > (value * frac1.denumerator);
 }
-
 bool operator==(int value, const CFraction& frac1)
 {
 	return frac1 == value;
@@ -242,10 +263,6 @@ bool operator>=(int value, const CFraction& frac1)
 
 }
 bool operator>(int value, const CFraction& frac1)
-{
-	return frac1 < value;
-
-}
 
 std::ostream& operator<<(std::ostream& out, const CFraction& frac)
 {
